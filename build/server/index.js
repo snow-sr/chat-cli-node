@@ -13,7 +13,14 @@ app.get("/", (req, res) => {
 io.on('connection', (socket) => {
     console.log(chalk.green(`New client connected: ${socket.id}`));
     io.emit(`connected`, socket.id);
+    socket.on('users', () => {
+        console.log(users);
+        io.emit('users', users);
+    });
     socket.on('message', (x, y) => {
+        if (!users.includes(x.user)) {
+            users.push(x.user);
+        }
         io.emit('message', x, y);
     });
 });

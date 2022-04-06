@@ -22,8 +22,18 @@ function sendMessage(message, user) {
 }
 function askForMessage() {
     rl.question("", (message) => {
-        if (message == "/clear") {
-            console.clear();
+        switch (message) {
+            case "/clear":
+                console.clear();
+                break;
+            case "/exit":
+                process.exit();
+                break;
+            case "/users":
+                socket.emit("users");
+                socket.on("users", users => {
+                    console.table(users);
+                });
         }
         if (!message.includes("/")) {
             let dateOfMessage = new Date().toLocaleTimeString();
