@@ -1,8 +1,9 @@
-import { io } from "socket.io-client";
+import { connect, io } from "socket.io-client";
 import readline from "readline";
 import chalk from "chalk";
 const messages = [];
 var user = null;
+var connected = false;
 
 var rl = readline.createInterface({
   input: process.stdin,
@@ -10,7 +11,18 @@ var rl = readline.createInterface({
   terminal: true,
 });
 
-const socket = io("http://localhost:8087");
+let serverLink = process.argv[3];
+
+const socket = io(`http://${serverLink}`);
+
+console.log(`${chalk.bold.yellow("Trying to connect you at:")} ${serverLink}`);
+
+
+socket.on("connected", () => {
+  connected = true;
+  console.log(`${chalk.bold.yellowBright("Status of the connection: ")}${connected}`);
+  askUser()
+})
 
 function sendMessage(message: string, user: string) {
   socket.emit("message", { message, user });
@@ -47,12 +59,12 @@ function askForMessage() {
 
 socket.on("message", function (x) {
   user ? console.log(`${chalk.blue(`${x.user} said:`)} ${x.message}`) : console.log('  someone sended a message, but you dont have a name yet, insert a name:');
-  
 });
 
 
 
-if(messages.length == 0 && user == null){
+function askUser(){
+if(messages.length == 0 && user == null && connected){
     rl.question(`${chalk.red("What is your name?")}`, (name) => {
         user = name;
         console.clear()
@@ -60,5 +72,6 @@ if(messages.length == 0 && user == null){
         askForMessage();
     })
 };
+}
 
 

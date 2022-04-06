@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "test",
-    "client": "nodemon ./build/src/index.js",
+    "client": "nodemon ./build/src/index.js -- server",
     "server": "nodemon ./build/server/index.js"
   },
   "keywords": [
@@ -19,6 +19,7 @@
   "dependencies": {
     "chalk": "^5.0.1",
     "express": "^4.17.3",
+    "npm2": "^2.0.0",
     "readline": "^1.3.0",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1"
